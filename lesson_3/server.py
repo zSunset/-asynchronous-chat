@@ -1,52 +1,74 @@
-import os
-from socket import AF_INET, SOCK_STREAM, socket
+import json
+import logging
 import sys
-from common.utils import send_message, get_message
+import socket
+
+from common.utils import load_configs, get_message, send_message
+
+CONFIGS = dict()
+
+SERVER_LOGGER = logging.getLogger('server')
 
 
-def parse_message(message):
-    if os.getenv('ACTION') in message \
-            and message[os.getenv('ACTION')] == os.getenv('PRESENCE') \
-            and os.getenv('TIME') in message \
-            and os.getenv('USER') in message \
-            and message[os.getenv('USER')][os.getenv('ACCOUNT_NAME')] == 'Guest':
-        return {os.getenv('RESPONSE'): 200}
+def handle_message(message, CONFIGS):
+    global SERVER_LOGGER
+    SERVER_LOGGER.debug(f'Обработка сообщения от клиента : {message}')
+    if CONFIGS.get('ACTION') in message \
+            and message[CONFIGS.get('ACTION')] == CONFIGS.get('PRESENCE') \
+            and CONFIGS.get('TIME') in message \
+            and CONFIGS.get('USER') in message \
+            and message[CONFIGS.get('USER')][CONFIGS.get('ACCOUNT_NAME')] == 'Guest':
+        return {CONFIGS.get('RESPONSE'): 200}
     return {
-        os.getenv('RESPONSE'): 400,
-        os.getenv('ERROR'): 'Bad Request'
+        CONFIGS.get('RESPONSE'): 400,
+        CONFIGS.get('ERROR'): 'Bad Request'
     }
 
 
 def main():
-    global server_address, server_port
+    global CONFIGS, SERVER_LOGGER
+    CONFIGS = load_configs()
+    listen_port = CONFIGS.get('DEFAULT_PORT')
     try:
-        if sys.argv[1] == '-a' and sys.argv[3] == '-p':
-            head, a, server_address, p, server_port, *tail = sys.argv
-            print(f'Сервер запущен с адресом {server_address} на {server_port} порту\n'
-                  f'Для выхода нажмите CTRL+C')
-        else:
-            raise NameError
-    except (IndexError, NameError):
-        server_address = ''
-        server_port = os.getenv('DEFAULT_PORT')
-        print(f'Сервер запущен с настройками по умолчанию на {server_port} порту.\n'
-              f'Для более точной кнфигурации задайте адресс и порт сервера: '
-              f'$ python3 server.py -a [ip-адрес] -p [порт сервера]\n\n'
-              f'Для выхода нажмите CTRL+C\n')
+        if '-p' in sys.argv:
+            listen_port = int(sys.argv[sys.argv.index('-p') + 1])
+        if not 65535 >= listen_port >= 1024:
+            raise ValueError
+    except IndexError:
+        SERVER_LOGGER.critical('После -\'p\' необходимо указать порт')
+        sys.exit(1)
+    except ValueError:
+        SERVER_LOGGER.critical(f'Попытка запуска сервера с некорректного порта {listen_port}.'
+                               'Порт должен быть указан в пределах от 1024 до 65535')
+        sys.exit(1)
 
-    transport = socket(AF_INET, SOCK_STREAM)
-    transport.bind((server_address, int(server_port)))
-    transport.listen(int(os.getenv('MAX_CONNECTIONS')))
+    try:
+        if '-a' in sys.argv:
+            listen_address = sys.argv[sys.argv.index('-a') + 1]
+        else:
+            listen_address = ''
+
+    except IndexError:
+        SERVER_LOGGER.critical('После \'a\'- необходимо указать адрес.')
+        sys.exit(1)
+
+    SERVER_LOGGER.info(f'Сервер запущен на порту: {listen_port}, по адресу: {listen_address}.')
+
+    transport = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    transport.bind((listen_address, listen_port))
+
+    transport.listen(CONFIGS.get('MAX_CONNECTIONS'))
 
     while True:
-        client, address = transport.accept()
-        message = get_message(client)
-        response = parse_message(message)
-        send_message(client, response)
-        client.close()
-
-        print(f'Запрос от клиента: {message}\n'
-              f'Код ответа для клиента: {response}')
+        client, client_address = transport.accept()
+        try:
+            message = get_message(client, CONFIGS)
+            response = handle_message(message, CONFIGS)
+            send_message(client, response, CONFIGS)
+            client.close()
+        except (ValueError, json.JSONDecodeError):
+            SERVER_LOGGER.critical('Принято некорретное сообщение от клиента')
+            client.close()
 
 
 if __name__ == '__main__':
