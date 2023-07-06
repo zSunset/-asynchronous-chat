@@ -10,8 +10,8 @@ def get_filename(filename):
     log_directory = os.path.split(filename)[0]
 
     # suffix - это расширение (с точкой) файла. 
-    # У нас - %Y%m%d. Например .20181231.
-    # Точка нам не нужна, т.к. файл будет называться suffix.log (20181231.log)
+    # У нас - %Y%m%d.
+    # Точка нам не нужна, т.к. файл будет называться suffix.log 
     date = os.path.splitext(filename)[1][1:]
 
     # Сформировали имя нового лог-файла
