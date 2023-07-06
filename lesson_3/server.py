@@ -3,15 +3,16 @@ import logging
 import sys
 import socket
 
+from log.server_log_config import SERVER_LOGGER
 from common.utils import load_configs, get_message, send_message
 
 CONFIGS = dict()
 
-SERVER_LOGGER = logging.getLogger('server')
+
 
 
 def handle_message(message, CONFIGS):
-    global SERVER_LOGGER
+
     SERVER_LOGGER.debug(f'Обработка сообщения от клиента : {message}')
     if CONFIGS.get('ACTION') in message \
             and message[CONFIGS.get('ACTION')] == CONFIGS.get('PRESENCE') \

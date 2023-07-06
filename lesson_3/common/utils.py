@@ -2,6 +2,7 @@ import json
 import os
 import sys
 
+PATH = '/home/sunset/Рабочий стол/-asynchronous-chat/lesson_3/config.json'
 
 def load_configs(is_server=True):
     config_keys = [
@@ -20,16 +21,16 @@ def load_configs(is_server=True):
     ]
     if not is_server:
         config_keys.append('DEFAULT_IP_ADDRESS')
-    if not os.path.exists('config.json'):
+    if not os.path.exists(PATH):
         print('Файл конфигурации не найден')
-        sys.exit(1)
-    with open('config.json') as config_file:
+        sys.exit(0)
+    with open(PATH) as config_file:
         CONFIGS = json.load(config_file)
     loaded_configs_keys = list(CONFIGS.keys())
     for key in config_keys:
         if key not in loaded_configs_keys:
             print(f'В файле конфигурации не хватает ключа: {key}')
-            sys.exit(1)
+            sys.exit(0)
     return CONFIGS
 
 
