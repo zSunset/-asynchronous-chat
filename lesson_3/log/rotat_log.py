@@ -1,16 +1,15 @@
 import logging as logging
 import os
 from logging.handlers import TimedRotatingFileHandler
-from time import sleep
 
-__rot_directory = '/home/sunset/Рабочий стол/-asynchronous-chat/lesson_3/log_file/server.log'
+__rot_directory = '/home/sunset/Рабочий стол/временная папка/lesson_3/log_file/server.log'
 
 def get_filename(filename):
     # Получаем директорию, где расположены логи
     log_directory = os.path.split(filename)[0]
 
     # suffix - это расширение (с точкой) файла. 
-    # У нас - %Y%m%d.
+    # У нас - %Y%m%d. Например .20181231.
     # Точка нам не нужна, т.к. файл будет называться suffix.log 
     date = os.path.splitext(filename)[1][1:]
 

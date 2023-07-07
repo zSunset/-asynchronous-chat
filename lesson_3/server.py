@@ -3,6 +3,7 @@ import logging
 import sys
 import socket
 
+from log.decorat_log import log
 from log.server_log_config import SERVER_LOGGER
 from common.utils import load_configs, get_message, send_message
 
@@ -10,7 +11,7 @@ CONFIGS = dict()
 
 
 
-
+@log
 def handle_message(message, CONFIGS):
 
     SERVER_LOGGER.debug(f'Обработка сообщения от клиента : {message}')
@@ -25,7 +26,7 @@ def handle_message(message, CONFIGS):
         CONFIGS.get('ERROR'): 'Bad Request'
     }
 
-
+@log
 def main():
     global CONFIGS, SERVER_LOGGER
     CONFIGS = load_configs()

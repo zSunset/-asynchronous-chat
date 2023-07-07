@@ -3,14 +3,14 @@ import sys
 import socket
 import time
 
-
+from log.decorat_log import log
 from log.client_log_config import CLIENT_LOGER
 from common.utils import load_configs, send_message, get_message
 
 CONFIGS = dict()
 
 
-
+@log
 def create_presence_message(account_name, CONFIGS):
     message = {
         CONFIGS.get('ACTION'): CONFIGS.get('PRESENCE'),
@@ -22,7 +22,7 @@ def create_presence_message(account_name, CONFIGS):
     CLIENT_LOGER.info('Создание сообщения для отпарвки на сервер.')
     return message
 
-
+@log
 def handle_response(message, CONFIGS):
     CLIENT_LOGER.info('Обработка сообщения от сервера.')
     if CONFIGS.get('RESPONSE') in message:
@@ -33,7 +33,7 @@ def handle_response(message, CONFIGS):
         return f'400 : {message[CONFIGS.get("ERROR")]}'
     raise ValueError
 
-
+@log
 def main():
     global CONFIGS
     CONFIGS = load_configs(is_server=False)
