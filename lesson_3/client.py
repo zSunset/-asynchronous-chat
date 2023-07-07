@@ -1,13 +1,14 @@
 import json
-import logging
 import sys
 import socket
 import time
 
+
+from log.client_log_config import CLIENT_LOGER
 from common.utils import load_configs, send_message, get_message
 
 CONFIGS = dict()
-SERVER_LOGGER = logging.getLogger('client')
+
 
 
 def create_presence_message(account_name, CONFIGS):
@@ -18,17 +19,17 @@ def create_presence_message(account_name, CONFIGS):
             CONFIGS.get('ACCOUNT_NAME'): account_name
         }
     }
-    SERVER_LOGGER.info('Создание сообщения для отпарвки на сервер.')
+    CLIENT_LOGER.info('Создание сообщения для отпарвки на сервер.')
     return message
 
 
 def handle_response(message, CONFIGS):
-    SERVER_LOGGER.info('Обработка сообщения от сервера.')
+    CLIENT_LOGER.info('Обработка сообщения от сервера.')
     if CONFIGS.get('RESPONSE') in message:
         if message[CONFIGS.get('RESPONSE')] == 200:
-            SERVER_LOGGER.info('Успешная обработка сообшения от сервера.')
+            CLIENT_LOGER.info('Успешная обработка сообшения от сервера.')
             return '200 : OK'
-        SERVER_LOGGER.critical('Обработка сообщения от сервера провалилась.')
+        CLIENT_LOGER.critical('Обработка сообщения от сервера провалилась.')
         return f'400 : {message[CONFIGS.get("ERROR")]}'
     raise ValueError
 
@@ -45,21 +46,21 @@ def main():
         server_address = CONFIGS.get('DEFAULT_IP_ADDRESS')
         server_port = CONFIGS.get('DEFAULT_PORT')
     except ValueError:
-        SERVER_LOGGER.critical('Порт должен быть указан в пределах от 1024 до 65535')
+        CLIENT_LOGER.critical('Порт должен быть указан в пределах от 1024 до 65535')
         sys.exit(1)
 
     transport = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     transport.connect((server_address, server_port))
     presence_message = create_presence_message('Guest', CONFIGS)
-    SERVER_LOGGER.info(f'Отправка сообшения серверу.')
+    CLIENT_LOGER.info(f'Отправка сообшения серверу.')
     send_message(transport, presence_message, CONFIGS)
     try:
         response = get_message(transport, CONFIGS)
         hanlded_response = handle_response(response, CONFIGS)
-        SERVER_LOGGER.debug(f'Ответ от сервера: {response}')
-        SERVER_LOGGER.info(f'Обработанный ответ от сервера: {hanlded_response}')
+        CLIENT_LOGER.debug(f'Ответ от сервера: {response}')
+        CLIENT_LOGER.info(f'Обработанный ответ от сервера: {hanlded_response}')
     except (ValueError, json.JSONDecodeError):
-        SERVER_LOGGER.critical('Ошибка декодирования сообщения')
+        CLIENT_LOGER.critical('Ошибка декодирования сообщения')
 
 
 if __name__ == '__main__':
