@@ -1,13 +1,12 @@
-import json
-import os
 import sys
-from common.variables import *
+import json
+from common.variables import MAX_PACKAGE_LENGTH, ENCODING
 from errors import IncorrectDataRecivedError, NonDictInputError
-
-
+from log.decorat_log import log
 sys.path.append('../')
 
 
+@log
 def get_message(client):
     encoded_response = client.recv(MAX_PACKAGE_LENGTH)
     if isinstance(encoded_response, bytes):
@@ -15,11 +14,13 @@ def get_message(client):
         response = json.loads(json_response)
         if isinstance(response, dict):
             return response
+        else:
+            raise IncorrectDataRecivedError
+    else:
         raise IncorrectDataRecivedError
-    raise IncorrectDataRecivedError
 
 
-
+@log
 def send_message(sock, message):
     if not isinstance(message, dict):
         raise NonDictInputError
