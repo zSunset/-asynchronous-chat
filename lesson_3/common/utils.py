@@ -1,52 +1,28 @@
 import json
 import os
 import sys
-
-PATH = '/home/sunset/Рабочий стол/-asynchronous-chat/lesson_3/config.json'
-
-def load_configs(is_server=True):
-    config_keys = [
-        'DEFAULT_PORT',
-        'MAX_CONNECTIONS',
-        'MAX_PACKAGE_LENGTH',
-        'ENCODING',
-        'ACTION',
-        'TIME',
-        'USER',
-        'ACCOUNT_NAME',
-        'PRESENCE',
-        'RESPONSE',
-        'ERROR',
-        'LOGGING_LEVEL'
-    ]
-    if not is_server:
-        config_keys.append('DEFAULT_IP_ADDRESS')
-    if not os.path.exists(PATH):
-        print('Файл конфигурации не найден')
-        sys.exit(0)
-    with open(PATH) as config_file:
-        CONFIGS = json.load(config_file)
-    loaded_configs_keys = list(CONFIGS.keys())
-    for key in config_keys:
-        if key not in loaded_configs_keys:
-            print(f'В файле конфигурации не хватает ключа: {key}')
-            sys.exit(0)
-    return CONFIGS
+from common.variables import *
+from errors import IncorrectDataRecivedError, NonDictInputError
 
 
-def send_message(opened_socket, message, CONFIGS):
-    json_message = json.dumps(message)
-    response = json_message.encode(CONFIGS.get('ENCODING'))
-    opened_socket.send(response)
+sys.path.append('../')
 
 
-def get_message(opened_socket, CONFIGS):
-    response = opened_socket.recv(CONFIGS.get('MAX_PACKAGE_LENGTH'))
-    if isinstance(response, bytes):
-        json_response = response.decode(CONFIGS.get('ENCODING'))
-        response_dict = json.loads(json_response)
-        if isinstance(response_dict, dict):
-            return response_dict
-        raise ValueError
-    raise ValueError
+def get_message(client):
+    encoded_response = client.recv(MAX_PACKAGE_LENGTH)
+    if isinstance(encoded_response, bytes):
+        json_response = encoded_response.decode(ENCODING)
+        response = json.loads(json_response)
+        if isinstance(response, dict):
+            return response
+        raise IncorrectDataRecivedError
+    raise IncorrectDataRecivedError
 
+
+
+def send_message(sock, message):
+    if not isinstance(message, dict):
+        raise NonDictInputError
+    js_message = json.dumps(message)
+    encoded_message = js_message.encode(ENCODING)
+    sock.send(encoded_message)
