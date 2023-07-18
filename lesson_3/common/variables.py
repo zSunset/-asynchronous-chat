@@ -19,3 +19,11 @@ LOGGING_LEVEL = logging.DEBUG
 MESSAGE = os.getenv('MESSAGE')
 MESSAGE_TEXT = os.getenv('MESSAGE_TEXT')
 SENDER = os.getenv('SENDER')
+DESTINATION = os.getenv('DESTINATION')
+EXIT = os.getenv('EXIT')
+
+RESPONSE_200 = {RESPONSE: 200}
+RESPONSE_400 = {
+    RESPONSE: 400,
+    ERROR: None
+}
