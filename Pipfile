@@ -7,6 +7,7 @@ name = "pypi"
 chardet = "*"
 pyyaml = "*"
 python-dotenv = "*"
+tabulate = "*"
 
 [dev-packages]
 
