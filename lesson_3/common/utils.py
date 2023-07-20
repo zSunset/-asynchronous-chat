@@ -1,9 +1,9 @@
-import sys
-import json
-from common.variables import MAX_PACKAGE_LENGTH, ENCODING
+from common.variables import *
 from errors import IncorrectDataRecivedError, NonDictInputError
-from log.decorat_log import log
+import json
+import sys
 sys.path.append('../')
+from log.decorat_log import log
 
 
 @log
@@ -18,7 +18,6 @@ def get_message(client):
             raise IncorrectDataRecivedError
     else:
         raise IncorrectDataRecivedError
-
 
 @log
 def send_message(sock, message):
