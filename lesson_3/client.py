@@ -2,7 +2,6 @@ import sys
 import json
 import socket
 import time
-import dis
 import argparse
 import logging
 import threading
@@ -12,7 +11,6 @@ from errors import IncorrectDataRecivedError, ReqFieldMissingError, ServerError
 from log.decorat_log import log
 from metaclasses import ClientMaker
 
-# Инициализация клиентского логера
 logger = logging.getLogger('client')
 
 class ClientSender(threading.Thread, metaclass=ClientMaker):
@@ -73,7 +71,7 @@ class ClientSender(threading.Thread, metaclass=ClientMaker):
         print('exit - выход из программы')
 
 
-class ClientReader(threading.Thread , metaclass=ClientMaker):
+class ClientReader(threading.Thread, metaclass=ClientMaker):
     def __init__(self, account_name, sock):
         self.account_name = account_name
         self.sock = sock
@@ -173,15 +171,14 @@ def main():
             f'Не удалось подключиться к серверу {server_address}:{server_port}, конечный компьютер отверг запрос на подключение.')
         exit(1)
     else:
-        module_reciver = ClientReader(client_name , transport)
+        module_reciver = ClientReader(client_name, transport)
         module_reciver.daemon = True
         module_reciver.start()
 
-        module_sender = ClientSender(client_name , transport)
+        module_sender = ClientSender(client_name, transport)
         module_sender.daemon = True
         module_sender.start()
         logger.debug('Запущены процессы')
-
         while True:
             time.sleep(1)
             if module_reciver.is_alive() and module_sender.is_alive():

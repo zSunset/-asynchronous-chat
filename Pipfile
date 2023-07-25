@@ -8,6 +8,7 @@ chardet = "*"
 pyyaml = "*"
 python-dotenv = "*"
 tabulate = "*"
+sqlalchemy = "==1.4"
 
 [dev-packages]
 
