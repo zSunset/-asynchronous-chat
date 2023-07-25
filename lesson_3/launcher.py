@@ -1,24 +1,18 @@
 import subprocess
 
-PROCESSES = []
+process = []
 
 while True:
-    ACTION = input('Выберите действие: q - выход, '
-                   's - запустить сервер и клиенты, '
-                   'x - закрыть все окна: ')
-
-    if ACTION == 'q':
+    action = input('Выберите действие: q - выход , s - запустить сервер и клиенты, x - закрыть все окна:')
+    if action == 'q':
         break
-    elif ACTION == 's':
-        PROCESSES.append(subprocess.Popen('python server.py',
-                                          shell=True))
-        PROCESSES.append(subprocess.Popen('python client.py -n test1',
-                                          shell=True))
-        PROCESSES.append(subprocess.Popen('python client.py -n test2',
-                                          shell=True))
-        PROCESSES.append(subprocess.Popen('python client.py -n test3',
-                                          shell=True))
-    elif ACTION == 'x':
-        while PROCESSES:
-            VICTIM = PROCESSES.pop()
-            VICTIM.kill()
+    elif action == 's':
+        clients_count = int(input('Введите количество тестовых клиентов для запуска: '))
+        # Запускаем сервер!
+        process.append(subprocess.Popen('python server.py', shell=True))
+        # Запускаем клиентов:
+        for i in range(clients_count):
+            process.append(subprocess.Popen(f'python client.py -n test{i + 1}', shell=True))
+    elif action == 'x':
+        while process:
+            process.pop().kill()
