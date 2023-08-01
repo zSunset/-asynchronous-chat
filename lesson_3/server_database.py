@@ -41,9 +41,9 @@ class ServerStorage:
             self.accepted = 0
 
     def __init__(self , path):
-        print(path)
         self.database_engine = create_engine(f'sqlite:///{path}', echo=False, pool_recycle=7200,
                                              connect_args={'check_same_thread': False})
+
         self.metadata = MetaData()
 
         users_table = Table('Users', self.metadata,
@@ -96,8 +96,8 @@ class ServerStorage:
         self.session.commit()
 
     def user_login(self, username, ip_address, port):
-        
         rez = self.session.query(self.AllUsers).filter_by(name=username)
+
         if rez.count():
             user = rez.first()
             user.last_login = datetime.datetime.now()
@@ -116,10 +116,11 @@ class ServerStorage:
 
         self.session.commit()
 
-
     def user_logout(self, username):
         user = self.session.query(self.AllUsers).filter_by(name=username).first()
+
         self.session.query(self.ActiveUsers).filter_by(user=user.id).delete()
+
         self.session.commit()
 
     def process_message(self, sender, recipient):
@@ -150,10 +151,10 @@ class ServerStorage:
         if not contact:
             return
 
-        print(self.session.query(self.UsersContacts).filter(
+        self.session.query(self.UsersContacts).filter(
             self.UsersContacts.user == user.id,
             self.UsersContacts.contact == contact.id
-        ).delete())
+        ).delete()
         self.session.commit()
 
     def users_list(self):
@@ -184,6 +185,7 @@ class ServerStorage:
 
     def get_contacts(self, username):
         user = self.session.query(self.AllUsers).filter_by(name=username).one()
+
         query = self.session.query(self.UsersContacts, self.AllUsers.name). \
             filter_by(user=user.id). \
             join(self.AllUsers, self.UsersContacts.contact == self.AllUsers.id)

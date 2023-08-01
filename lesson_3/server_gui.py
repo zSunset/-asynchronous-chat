@@ -1,9 +1,8 @@
 import sys
 from PyQt5.QtWidgets import QMainWindow, QAction, qApp, QApplication, QLabel, QTableView, QDialog, QPushButton, \
-    QLineEdit, QFileDialog, QMessageBox
+    QLineEdit, QFileDialog , QMessageBox
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtCore import Qt
-
 
 def gui_create_model(database):
     list_users = database.active_users_list()
@@ -55,13 +54,11 @@ class MainWindow(QMainWindow):
 
         self.refresh_button = QAction('Обновить список', self)
 
-        self.config_btn = QAction('Настройки сервера', self)
+        self.config_btn = QAction('Настройки сервера' , self)
 
         self.show_history_button = QAction('История клиентов', self)
 
-
         self.statusBar()
-
 
         self.toolbar = self.addToolBar('MainBar')
         self.toolbar.addAction(exitAction)
@@ -69,15 +66,12 @@ class MainWindow(QMainWindow):
         self.toolbar.addAction(self.show_history_button)
         self.toolbar.addAction(self.config_btn)
 
-
         self.setFixedSize(800, 600)
         self.setWindowTitle('Messaging Server alpha release')
-
 
         self.label = QLabel('Список подключённых клиентов:', self)
         self.label.setFixedSize(240, 15)
         self.label.move(10, 25)
-
 
         self.active_clients_table = QTableView(self)
         self.active_clients_table.move(10, 45)
@@ -133,6 +127,7 @@ class ConfigWindow(QDialog):
             dialog = QFileDialog(self)
             path = dialog.getExistingDirectory()
             path = path.replace('/', '\\')
+            self.db_path.clear()
             self.db_path.insert(path)
 
         self.db_path_select.clicked.connect(open_file_dialog)
