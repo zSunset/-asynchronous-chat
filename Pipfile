@@ -9,6 +9,7 @@ pyyaml = "*"
 python-dotenv = "*"
 tabulate = "*"
 sqlalchemy = "==1.4"
+pyqt5 = "*"
 
 [dev-packages]
 

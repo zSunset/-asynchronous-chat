@@ -22,9 +22,18 @@ SENDER = os.getenv('SENDER')
 DESTINATION = os.getenv('DESTINATION')
 EXIT = os.getenv('EXIT')
 SERVER_DATABASE = os.getenv('SERVER_DATABASE')
+LIST_INFO = os.getenv('LIST_INFO')
+USERS_REQUEST = os.getenv('USERS_REQUEST')
+ADD_CONTACT = os.getenv('ADD_CONTACT')
+REMOVE_CONTACT = os.getenv('remove')
+GET_CONTACTS = os.getenv('get_contacts')
 
 RESPONSE_200 = {RESPONSE: 200}
 RESPONSE_400 = {
     RESPONSE: 400,
     ERROR: None
 }
+
+RESPONSE_202 = {RESPONSE: 202,
+                LIST_INFO:None
+                }
