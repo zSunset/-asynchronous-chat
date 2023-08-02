@@ -10,6 +10,7 @@ python-dotenv = "*"
 tabulate = "*"
 sqlalchemy = "==1.4"
 pyqt5 = "*"
+pycryptodome = "*"
 
 [dev-packages]
 

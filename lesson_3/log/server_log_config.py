@@ -1,13 +1,28 @@
+import sys
+sys.path.append('../')
 import logging
+import logging.handlers
 import os
+from common.variables import LOGGING_LEVEL
 
-__directory = '/home/sunset/Рабочий стол/временная папка/lesson_3/log_file/'
-__formater = logging.Formatter('%(asctime)-10s %(levelname)-6s %(message)-5s')
-__handler_client = logging.FileHandler(os.path.join(__directory, 'server.log'), mode='w')
+server_formatter = logging.Formatter('%(asctime)s %(levelname)s %(filename)s %(message)s')
 
-SERVER_LOGGER = logging.getLogger('server')
-SERVER_LOGGER.setLevel(logging.INFO)
+path = os.path.dirname(os.path.abspath(__file__))
+path = os.path.join(path, 'server.log')
 
-__handler_client.setFormatter(__formater)
+steam = logging.StreamHandler(sys.stderr)
+steam.setFormatter(server_formatter)
+steam.setLevel(logging.INFO)
+log_file = logging.handlers.TimedRotatingFileHandler(path, encoding='utf8', interval=1, when='D')
+log_file.setFormatter(server_formatter)
 
-SERVER_LOGGER.addHandler(__handler_client)
+logger = logging.getLogger('server')
+logger.addHandler(steam)
+logger.addHandler(log_file)
+logger.setLevel(LOGGING_LEVEL)
+
+if __name__ == '__main__':
+    logger.critical('Test critical event')
+    logger.error('Test error ivent')
+    logger.debug('Test debug ivent')
+    logger.info('Test info ivent')
