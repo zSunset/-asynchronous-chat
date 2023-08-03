@@ -1,17 +1,29 @@
-import logging
-import traceback
-import inspect
+import sys
 import os
+sys.path.append('../')
+import logging
+from common.variables import LOGGING_LEVEL
 
 
-__directory = '/home/sunset/Рабочий стол/временная папка/lesson_3/log_file/'
-__formater = logging.Formatter('%(asctime)-10s %(levelname)-6s %(message)-5s')
-__handler_client = logging.FileHandler(os.path.join(__directory, 'client.log'), mode='w')
+client_formatter = logging.Formatter('%(asctime)s %(levelname)s %(filename)s %(message)s')
 
+path = os.path.dirname(os.path.abspath(__file__))
+path = os.path.join(path, 'client.log')
 
-CLIENT_LOGER = logging.getLogger('client')
-CLIENT_LOGER.setLevel(logging.INFO)
+steam = logging.StreamHandler(sys.stderr)
+steam.setFormatter(client_formatter)
+steam.setLevel(logging.INFO)
+log_file = logging.FileHandler(path, encoding='utf8')
+log_file.setFormatter(client_formatter)
 
-__handler_client.setFormatter(__formater)
+logger = logging.getLogger('client')
+logger.addHandler(steam)
+logger.addHandler(log_file)
+logger.setLevel(LOGGING_LEVEL)
 
-CLIENT_LOGER.addHandler(__handler_client)
+# отладка
+if __name__ == '__main__':
+    logger.critical('Test critical event')
+    logger.error('Test error ivent')
+    logger.debug('Test debug ivent')
+    logger.info('Test info ivent')
