@@ -11,6 +11,8 @@ tabulate = "*"
 sqlalchemy = "==1.4"
 pyqt5 = "*"
 pycryptodome = "*"
+pylint = "*"
+sphinx = "*"
 
 [dev-packages]
 
