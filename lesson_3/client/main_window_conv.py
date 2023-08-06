@@ -1,4 +1,13 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'client.ui'
+#
+# Created by: PyQt5 UI code generator 5.11.3
+#
+# WARNING! All changes made in this file will be lost!
+
+from PyQt5 import QtCore, QtWidgets
+
 
 class Ui_MainClientWindow(object):
     def setupUi(self, MainClientWindow):
@@ -23,7 +32,9 @@ class Ui_MainClientWindow(object):
         self.text_message.setGeometry(QtCore.QRect(300, 360, 441, 71))
         self.text_message.setObjectName("text_message")
         self.label_new_message = QtWidgets.QLabel(self.centralwidget)
-        self.label_new_message.setGeometry(QtCore.QRect(300, 330, 450, 16)) # Правка тут
+        # Правка тут
+        self.label_new_message.setGeometry(
+            QtCore.QRect(300, 330, 450, 16))
         self.label_new_message.setObjectName("label_new_message")
         self.list_contacts = QtWidgets.QListView(self.centralwidget)
         self.list_contacts.setGeometry(QtCore.QRect(10, 20, 251, 411))
@@ -68,17 +79,29 @@ class Ui_MainClientWindow(object):
 
     def retranslateUi(self, MainClientWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainClientWindow.setWindowTitle(_translate("MainClientWindow", "Чат Программа alpha release"))
-        self.label_contacts.setText(_translate("MainClientWindow", "Список контактов:"))
-        self.btn_add_contact.setText(_translate("MainClientWindow", "Добавить контакт"))
-        self.btn_remove_contact.setText(_translate("MainClientWindow", "Удалить контакт"))
-        self.label_history.setText(_translate("MainClientWindow", "История сообщений:"))
-        self.label_new_message.setText(_translate("MainClientWindow", "Введите новое сообщение:"))
-        self.btn_send.setText(_translate("MainClientWindow", "Отправить сообщение"))
-        self.btn_clear.setText(_translate("MainClientWindow", "Очистить поле"))
-        self.menu.setTitle(_translate("MainClientWindow", "Файл"))
-        self.menu_2.setTitle(_translate("MainClientWindow", "Контакты"))
-        self.menu_exit.setText(_translate("MainClientWindow", "Выход"))
-        self.menu_add_contact.setText(_translate("MainClientWindow", "Добавить контакт"))
-        self.menu_del_contact.setText(_translate("MainClientWindow", "Удалить контакт"))
-
+        MainClientWindow.setWindowTitle(_translate(
+            "MainClientWindow", "Чат Программа alpha release"))
+        self.label_contacts.setText(_translate(
+            "MainClientWindow", "Список контактов:"))
+        self.btn_add_contact.setText(_translate(
+            "MainClientWindow", "Добавить контакт"))
+        self.btn_remove_contact.setText(_translate(
+            "MainClientWindow", "Удалить контакт"))
+        self.label_history.setText(_translate(
+            "MainClientWindow", "История сообщений:"))
+        self.label_new_message.setText(_translate(
+            "MainClientWindow", "Введите новое сообщение:"))
+        self.btn_send.setText(_translate(
+            "MainClientWindow", "Отправить сообщение"))
+        self.btn_clear.setText(_translate(
+            "MainClientWindow", "Очистить поле"))
+        self.menu.setTitle(_translate(
+            "MainClientWindow", "Файл"))
+        self.menu_2.setTitle(_translate(
+            "MainClientWindow", "Контакты"))
+        self.menu_exit.setText(_translate(
+            "MainClientWindow", "Выход"))
+        self.menu_add_contact.setText(_translate(
+            "MainClientWindow", "Добавить контакт"))
+        self.menu_del_contact.setText(_translate(
+            "MainClientWindow", "Удалить контакт"))
